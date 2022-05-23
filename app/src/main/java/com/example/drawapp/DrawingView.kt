@@ -17,10 +17,18 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
     private var color =  Color.BLACK
     private var canvas : Canvas? = null
     private var mPaths = ArrayList<CustomPath>()
+    private var mUndoPaths = ArrayList<CustomPath>()
 
 
     init {
         setupDrawing()
+    }
+
+    fun onClickUndo(){
+        if (mPaths.size>0){
+            mUndoPaths.add(mPaths.removeAt(mPaths.size -1))
+            invalidate()
+        }
     }
 
     private fun setupDrawing(){
@@ -46,10 +54,10 @@ class DrawingView(context: Context, attrs: AttributeSet): View(context, attrs) {
         super.onDraw(canvas)
         canvas.drawBitmap(mCanvasBitmap!!,0f,0f, mCanvasPaint)
 
-        for (path in mPaths){
-            mDrawPaint!!.strokeWidth = path.brushThickness
-            mDrawPaint!!.color = path.color
-            canvas.drawPath(path, mDrawPaint!!)
+        for (p in mPaths){
+            mDrawPaint!!.strokeWidth = p.brushThickness
+            mDrawPaint!!.color = p.color
+            canvas.drawPath(p, mDrawPaint!!)
         }
 
         if (!mDrawPath!!.isEmpty){
